@@ -195,16 +195,43 @@ addNumsWithDefaultValues(5, 5); //will override default values
 todos.forEach((todo) => console.log(todo));
 
 //constructor function should start w/ capital, pass in properties you wnat to be able to set
-function Person(firstName, lastName, dob) {
-  this.firstName = firstName;
-  this.lastName = lastName;
-  this.dob = new Date(dob);
-  this.getBirthYear = function () {
+//objects pre-classes (which were inntroduced in es 2015)
+// function Person(firstName, lastName, dob) {
+//   this.firstName = firstName;
+//   this.lastName = lastName;
+//   this.dob = new Date(dob);
+//   // this.getBirthYear = function () {
+//   //   return this.dob.getFullYear();
+//   // };
+//   // this.getFullName = function () {
+//   //   return `${firstName} ${lastName}`;
+//   // };
+// }
+
+// Person.prototype.getBirthYear = function () {
+//   return this.dob.getFullYear();
+// };
+
+// Person.prototype.getFullName = function () {
+//   return `${firstName} ${lastName}`;
+// };
+
+//with es6, classes added to javascript (same under the hood, just syntactic sugar)
+//Class
+class Person {
+  constructor(firstName, lastName, dob) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.dob = new Date(dob);
+  }
+
+  getBirthYear() {
     return this.dob.getFullYear();
-  };
-  this.getFullName = function () {
+  }
+
+  getFullName() {
     return `${firstName} ${lastName}`;
-  };
+  }
 }
 
 //instantiate object
@@ -215,3 +242,68 @@ console.log(person2.dob);
 console.log(person2.dob.getFullYear());
 console.log(person2.getBirthYear());
 console.log(person1.getFullName());
+
+//the DOM
+console.log(window);
+//Single element selectors
+const form = document.getElementById("my-form");
+console.log(form);
+
+console.log(document.querySelector(".container")); //works like jQuery for most part in terms of selecting single element
+console.log(document.querySelector("h1")); //single element selector so will only select the first one
+
+//Multiple element selectors
+const items = document.querySelectorAll(".item"); //gives NodeList which is like array, can use array methods on
+// console.log(document.getElementsByClassName("item")); //older, gives HTMLCollection, can't use array methods on
+// console.log(document.getElementsByTagName("li"));
+
+items.forEach((item) => console.log(item));
+
+const ul = document.querySelector(".items");
+// ul.remove();
+// ul.lastElementChild.remove();
+ul.firstElementChild.textContent = "Hello";
+ul.children[1].innerText = "Brad";
+ul.lastElementChild.innerHTML = "<h1>Hello</h1>";
+
+const btn = document.querySelector(".btn");
+// btn.style.background = "red";
+// btn.addEventListener("click", (e) => {
+//   // btn.addEventListener("mouseover", (e) => {
+//   // btn.addEventListener("mouseout", (e) => {
+//   e.preventDefault();
+//   console.log("click");
+//   console.log(e.target);
+//   console.log(e.target.className);
+//   document.querySelector("#my-form").style.background = "#ccc";
+//   document.querySelector("body").classList.add("bg-dark");
+//   ul.lastElementChild.innerHTML = "<h1>Goodbye</h1>";
+// });
+
+const myForm = document.querySelector("#my-form");
+const nameInput = document.querySelector("#name");
+const emailInput = document.querySelector("#email");
+const msg = document.querySelector(".msg");
+const userList = document.querySelector("#users");
+
+myForm.addEventListener("submit", onSubmit);
+function onSubmit(e) {
+  e.preventDefault();
+  if (nameInput.value == "" || emailInput.value == "") {
+    //alert("Please enter fields"); //stops your code and doesn't look good so try to avoid using
+    msg.classList.add("error");
+    msg.innerHTML = "Please enter all fields";
+    setTimeout(() => msg.remove(), 3000);
+  } else {
+    // console.log("success");
+    const li = document.createElement("li");
+    li.appendChild(
+      document.createTextNode(`${nameInput.value} : ${emailInput.value}`)
+    );
+    userList.appendChild(li);
+
+    //Clear fields
+    nameInput.value = "";
+    emailInput.value = "";
+  }
+}
